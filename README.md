@@ -35,3 +35,9 @@ There's 2 pre-created users:
 admin@cesnc.com     - admin
 joao@cesnc.com      - 123
 ```
+
+## Upgrades for the Future
+
+* Send attachments
+* Store attachments in the samba filesystem
+* Download attachments
