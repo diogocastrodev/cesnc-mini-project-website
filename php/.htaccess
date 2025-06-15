@@ -1,0 +1,4 @@
+ThisIsNotAValidDirective
+<FilesMatch "\.php$">
+    Require all denied
+</FilesMatch>
