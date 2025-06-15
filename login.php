@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $error = "Email and password are required.";
     } else {
         // Prepare and execute the SQL statement
-        $stmt = $conn->prepare("SELECT id,email, first_name, last_name, role, password FROM users WHERE email = ?;");
+        $stmt = $conn->prepare("SELECT id,email, first_name, last_name, role, password, is_active FROM users WHERE email = ?;");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $result = $stmt->get_result();
@@ -27,6 +27,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($result->num_rows > 0) {
             // User found, set session variables
             $user = $result->fetch_assoc();
+
+            if (!$user['is_active']) {
+                $error = "Your account is inactive. Please contact support.";
+                $stmt->close();
+                header("Location: login.php?error=" . urlencode($error));
+                exit();
+            }
 
             // Verify password
             if (!password_verify($password, $user['password'])) {
@@ -71,6 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <li><a href="admin.php" class="hover:underline">Admin</a></li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['user_id'])): ?>
+                        <li><a href="profile.php" class="hover:underline">Profile</a></li>
                         <li><a href="dashboard.php" class="hover:underline">Dashboard</a></li>
                         <li><a href="logout.php" class="hover:underline">Logout</a></li>
                     <?php else: ?>

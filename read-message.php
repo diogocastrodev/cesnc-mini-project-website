@@ -52,6 +52,7 @@ $stmt->close();
                         <li><a href="admin.php" class="hover:underline">Admin</a></li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['user_id'])): ?>
+                        <li><a href="profile.php" class="hover:underline">Profile</a></li>
                         <li><a href="dashboard.php" class="hover:underline">Dashboard</a></li>
                         <li><a href="logout.php" class="hover:underline">Logout</a></li>
                     <?php else: ?>

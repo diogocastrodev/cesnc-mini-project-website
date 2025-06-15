@@ -27,6 +27,7 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
                         <li><a href="admin.php" class="hover:underline">Admin</a></li>
                     <?php endif; ?>
                     <?php if (isset($_SESSION['user_id'])): ?>
+                        <li><a href="profile.php" class="hover:underline">Profile</a></li>
                         <li><a href="dashboard.php" class="hover:underline">Dashboard</a></li>
                         <li><a href="logout.php" class="hover:underline">Logout</a></li>
                     <?php else: ?>
@@ -38,13 +39,19 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
 
         </nav>
         <main id=" main-root" class="container mx-auto flex-1 p-4">
-            <form action="add_user.php" method="post" class="px-8 pt-6 pb-8 mb-4">
+            <?php if (isset($_GET['error'])): ?>
+                <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong>Error:</strong> <?php echo htmlspecialchars($_GET['error']); ?>
+                </div>
+            <?php endif; ?>
+            <?php if (isset($_GET['success'])): ?>
+                <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+                    <strong>Success: </strong> <?php echo htmlspecialchars($_GET['success']); ?>
+                </div>
+            <?php endif; ?>
+            <form action="admin_create_user.php" method="post" class="px-8 pt-6 pb-8 mb-4">
                 <h2 class="text-2xl font-bold mb-4">Add New User</h2>
-                <?php if (isset($_GET['error'])): ?>
-                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
-                        <strong>Error:</strong> <?php echo htmlspecialchars($_GET['error']); ?>
-                    </div>
-                <?php endif; ?>
+
                 <div class="flex flex-row space-x-6">
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="first_name">First Name</label>
@@ -63,6 +70,16 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="address">Address</label>
                         <input type="text" id="address" name="address" required class="shadow appearance-none border rounded w-64 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                </div>
+                <div class="flex flex-row space-x-6">
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="phone">Phone</label>
+                        <input type="text" id="phone" name="phone" required class="shadow appearance-none border rounded w-64 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+                    </div>
+                    <div class="mb-4">
+                        <label class="block text-gray-700 text-sm font-bold mb-2" for="dob">Date of Birth</label>
+                        <input type="date" id="dob" name="dob" required class="shadow appearance-none border rounded w-64 py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
                     </div>
                 </div>
                 <div class="flex flex-row space-x-6">
@@ -94,12 +111,13 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
                         <th class="py-2 px-4 border-b">Last Name</th>
                         <th class="py-2 px-4 border-b">Email</th>
                         <th class="py-2 px-4 border-b">Role</th>
+                        <th class="py-2 px-4 border-b">Status</th>
                         <th class="py-2 px-4 border-b">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                    $stmt = $conn->prepare("SELECT id, first_name, last_name, email, role FROM users");
+                    $stmt = $conn->prepare("SELECT id, first_name, last_name, email, role, is_active FROM users");
                     $stmt->execute();
                     $result = $stmt->get_result();
                     while ($user = $result->fetch_assoc()) {
@@ -109,7 +127,8 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'admin') {
                         echo "<td class='py-2 px-4 border-b text-center'>" . htmlspecialchars($user['last_name']) . "</td>";
                         echo "<td class='py-2 px-4 border-b text-center'>" . htmlspecialchars($user['email']) . "</td>";
                         echo "<td class='py-2 px-4 border-b text-center'>" . htmlspecialchars($user['role']) . "</td>";
-                        echo "<td class='py-2 px-4 border-b text-center'><a href='edit_user.php?id=" . $user['id'] . "' class='text-blue-500 hover:underline'>Edit</a> | <a href='delete_user.php?id=" . $user['id'] . "' class='text-red-500 hover:underline'>Delete</a></td>";
+                        echo "<td class='py-2 px-4 border-b text-center'>" . ($user['is_active'] ? 'Active' : 'Inactive') . "</td>";
+                        echo "<td class='py-2 px-4 border-b text-center'><a href='admin_edit_user.php?id=" . $user['id'] . "' class='text-blue-500 hover:underline'>Edit</a> | <a href='admin_toggleStatus.php?id=" . $user['id'] . "' class='text-red-500 hover:underline'>" . ($user['is_active'] ? 'Deactivate' : 'Activate') . "</a></td>";
                         echo "</tr>";
                     }
                     $stmt->close();
