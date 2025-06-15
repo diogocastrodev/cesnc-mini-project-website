@@ -1,5 +1,6 @@
 <?php
 include_once 'php/mysql_connection.php';
+include_once 'php/utils.php';
 session_start();
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
@@ -156,10 +157,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET') {
                     </div>
                     <div class="mb-4">
                         <label class="block text-gray-700 text-sm font-bold mb-2" for="role">Role</label>
-                        <select id="role" name="role" required class="w-64 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php if ($_SESSION['user_id'] === $user['id'] && $user['role'] === 'admin') echo 'disabled'; ?>>
-                            <option value="user" <?php if ($user['role'] === 'user') echo 'selected'; ?>>User</option>
-                            <option value="admin" <?php if ($user['role'] === 'admin') echo 'selected'; ?>>Admin</option>
-                        </select>
+                        <div id="role" name="role" required class="w-64 shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" <?php if ($_SESSION['user_id'] === $user['id'] && $user['role'] === 'admin') echo 'disabled'; ?>>
+                            <span><?php echo htmlspecialchars(capitalize($user['role'])); ?></span>
+                        </div>
                     </div>
                 </div>
                 <div class="flex items-center justify-between">

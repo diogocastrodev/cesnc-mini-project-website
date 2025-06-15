@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <main id=" main-root" class="container mx-auto flex-1 p-4 flex justify-center items-center">
             <div class="px-6 py-6 bg-gray-50 shadow-md rounded-md">
                 <div class="text-center font-bold mb-3 text-xl">Login</div>
-                <form action="login.php" method="POST" class="flex flex-col gap-y-4">
+                <form action="login.php" method="POST" class="flex flex-col items-center gap-y-4">
                     <div class="">
                         <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
                         <input type="email" id="email" name="email" required class="w-64 mt-1 block border border-gray-300 rounded-md shadow-sm p-2" />
@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
                         <input type="password" id="password" name="password" required class="mt-1 block w-64 border border-gray-300 rounded-md shadow-sm p-2" />
                     </div>
-                    <button type="submit" class="w-full bg-blue-500 text-white p-2 rounded-md shadow-sm">Login</button>
+                    <button type="submit" class="w-64 bg-blue-500 text-white p-2 rounded-md shadow-sm">Login</button>
                     <div class="text-red-500 text-center text-sm"><?php if (isset($error)) echo $error; ?></div>
                 </form>
             </div>

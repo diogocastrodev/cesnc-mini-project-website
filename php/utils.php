@@ -26,3 +26,8 @@ function humanDate($datetimeStr)
         return $dt->format('Y-m-d H:i');
     }
 }
+
+function capitalize($string)
+{
+    return ucwords(strtolower($string));
+}
